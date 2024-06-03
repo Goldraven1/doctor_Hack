@@ -1,0 +1,7 @@
+{% extends 'layout.html' %} {% block content %}
+<h1>Hello</h1>
+<div class="test">
+  <p class="text-primary">This is a test.</p>
+</div>
+<script src="{{url_for('static', filename='main.js')}}"></script>
+{% endblock content %}
