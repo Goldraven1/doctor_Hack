@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, url_for
 from flask import request
 from services import doctor, unforeseen_circumstances, schedule, del_doctor
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+Bootstrap(app)
 
 # Свяжите функции с маршрутами Flask
 app.add_url_rule('/add_doctor', view_func=doctor, methods=['GET', 'POST'])
