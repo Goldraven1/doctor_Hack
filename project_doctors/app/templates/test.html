@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Record Test</title>
+</head>
+<body>
+    <h1>Database Record Test</h1>
+
+    <h2>Добавить врача</h2>
+    <form action="/" method="post">
+        <input type="text" name="name" placeholder="Имя">
+        <input type="text" name="specialization" placeholder="Специализация">
+        <input type="text" name="contact" placeholder="Контакт">
+        <input type="submit" value="Добавить врача">
+    </form>
+
+    <h2>Добавить непредвиденные обстоятельства</h2>
+    <form action="/" method="post">
+        <input type="text" name="doctor_id" placeholder="ID врача">
+        <input type="text" name="type" placeholder="Тип">
+        <input type="date" name="start_date">
+        <input type="date" name="end_date">
+        <input type="checkbox" name="approved" value="True"> Одобрено
+        <input type="submit" value="Добавить обстоятельства">
+    </form>
+
+    <h2>Добавить расписание</h2>
+    <form action="/" method="post">
+        <input type="text" name="doctor_id" placeholder="ID врача">
+        <input type="date" name="date">
+        <input type="text" name="shift" placeholder="Смена">
+        <input type="submit" value="Добавить расписание">
+    </form>
+</body>
+</html>

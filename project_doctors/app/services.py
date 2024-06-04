@@ -1,11 +1,9 @@
 from models import Database
-from app import app
 from flask import request, redirect
 
 db = Database()
 
-@app.route('/', methods=['GET', 'POST'])
-def doctor():
+def doctor(request):
     try:
         # метод записи врачей в базу: имя, специализация, контактная информация
         if request.method == 'POST':
@@ -18,8 +16,7 @@ def doctor():
     except Exception as e:
         print("Врач не добавлен", e)
 
-@app.route('/', methods=['GET', 'POST'])
-def unforeseen_circumstances():
+def unforeseen_circumstances(request):
     try:
         #метод обработки непредвиденных обстоятельств
         if request.method == 'POST':
@@ -34,9 +31,7 @@ def unforeseen_circumstances():
     except Exception as e:
         print("Обстоятельства не обработаны", e)
 
-
-@app.route('/', methods=['GET', 'POST'])
-def shedule():
+def shedule(request):
     try:
         #метод записи  расписания врачей
         if request.method == 'POST':
@@ -48,5 +43,3 @@ def shedule():
             return redirect('/')
     except Exception as e:
         print("Расписание не добавлено", e)
-
-
