@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask import request
-from services import doctor, unforeseen_circumstances, shedule  # Импортируйте функции из services.py
+from services import doctor, unforeseen_circumstances, shedule  
 
 app = Flask(__name__)
 
@@ -12,10 +12,8 @@ app.add_url_rule('/add_shedule', view_func=shedule, methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def test():
     if request.method == 'POST':
-        # Обработка POST-запроса
-        pass
+        return redirect(url_for('test'))  
     else:
-        # Обработка GET-запроса
         return render_template('test.html', title='test Page')
 
 if __name__ == '__main__':
