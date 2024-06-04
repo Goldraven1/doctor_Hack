@@ -1,13 +1,14 @@
 from flask import Flask, render_template, redirect, url_for
 from flask import request
-from services import doctor, unforeseen_circumstances, schedule  
+from services import doctor, unforeseen_circumstances, schedule, del_doctor
 
 app = Flask(__name__)
 
 # Свяжите функции с маршрутами Flask
 app.add_url_rule('/add_doctor', view_func=doctor, methods=['GET', 'POST'])
 app.add_url_rule('/add_unforeseen_circumstances', view_func=unforeseen_circumstances, methods=['GET', 'POST'])
-app.add_url_rule('/add_shedule', view_func=schedule, methods=['GET', 'POST'])
+app.add_url_rule('/add_schedule', view_func=schedule, methods=['GET', 'POST'])
+app.add_url_rule('/delete_doctor', view_func=del_doctor, methods=['GET', 'POST'])
 
 @app.route('/', methods=['GET', 'POST'])
 def test():

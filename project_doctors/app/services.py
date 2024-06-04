@@ -12,9 +12,20 @@ def doctor(request=request):
             contact = request.form['contact']
             db.add_doctor(name, specialization, contact)
             print("Врач успешно добавлен!")
-            return redirect('/')
+            return redirect('/'), 200
     except Exception as e:
         print("Врач не добавлен", e)
+
+def del_doctor():
+    try:
+        #метод удаления врачей по их id
+        if request.method == 'POST':
+            doctor_id = request.form['doctor_id']
+            db.delete_doctor(doctor_id)
+            print("Врач успешно удалён!")
+            return redirect('/')
+    except Exception as e:
+        print("Врач не был удалён", e)
 
 def unforeseen_circumstances(request=request):
     try:
@@ -27,7 +38,7 @@ def unforeseen_circumstances(request=request):
             approved = request.form['approved']
             db.add_unforeseen_circumstances(doctor_id, type, start_date, end_date, approved)  
             print("Обстоятельства успешно обработаны!")
-            return redirect('/')
+            return redirect('/'), 200
     except Exception as e:
         print("Обстоятельства не обработаны", e)
 
@@ -40,7 +51,7 @@ def schedule(request=request):
             shift = request.form['shift']
             db.add_schedule(doctor_id, date, shift)
             print("Расписание успешно добавлено!")
-            return redirect('/')
+            return redirect('/'), 200
     except Exception as e:
         print("Расписание не добавлено", e)
 

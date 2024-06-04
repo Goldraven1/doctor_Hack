@@ -31,6 +31,20 @@ class Database:
         except Exception as err:
             print("Ошибка при добавлении врача:", err)
             return False
+        
+    def delete_doctor(self, doctor_id):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                f"DELETE FROM doctors WHERE id = {doctor_id}"
+            )
+            self.conn.commit()
+            cursor.close()
+            print("Врач успешно удалён!")
+            return True
+        except Exception as err:
+            print("Ошибка при удалении врача:", err)
+            return False
 
     def add_unforeseen_circumstances(self, doctor_id, type, start_date, end_date, approved):
         try:
