@@ -21,7 +21,7 @@ class Database:
         try:
             cursor = self.conn.cursor()
             cursor.execute(
-                "INSERT INTO doctors (name, specialization, contact) VALUES (%s, %s, %s)",
+                "INSERT INTO doctors (name, specialization, contact_info) VALUES (%s, %s, %s)",
                 (name, specialization, contact)
             )
             self.conn.commit()
@@ -32,17 +32,17 @@ class Database:
             print("Ошибка при добавлении врача:", err)
             return False
 
-def add_unforeseen_circumstances(self, doctor_id, type, start_date, end_date, approved):
-    try:
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "INSERT INTO unforeseen_circumstances (doctor_id, type, start_date, end_date, approved) VALUES (%s, %s, %s, %s, %s)",
-            (doctor_id, type, start_date, end_date, approved)
-        )
-        self.conn.commit()
-        cursor.close()
-        print("Непредвиденные обстоятельства успешно добавлены!")
-        return True
-    except Exception as err:
-        print("Ошибка при добавлении непредвиденных обстоятельств:", err)
-        return False
+    def add_unforeseen_circumstances(self, doctor_id, type, start_date, end_date, approved):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "INSERT INTO unforeseen_circumstances (doctor_id, type, start_date, end_date, approved) VALUES (%s, %s, %s, %s, %s)",
+                (doctor_id, type, start_date, end_date, approved)
+            )
+            self.conn.commit()
+            cursor.close()
+            print("Непредвиденные обстоятельства успешно добавлены!")
+            return True
+        except Exception as err:
+            print("Ошибка при добавлении непредвиденных обстоятельств:", err)
+            return False
