@@ -43,3 +43,5 @@ def shedule(request):
             return redirect('/')
     except Exception as e:
         print("Расписание не добавлено", e)
+
+# def shedule_update(request):

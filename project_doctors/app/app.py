@@ -9,7 +9,7 @@ app.add_url_rule('/add_doctor', view_func=doctor, methods=['GET', 'POST'])
 app.add_url_rule('/add_unforeseen_circumstances', view_func=unforeseen_circumstances, methods=['GET', 'POST'])
 app.add_url_rule('/add_shedule', view_func=shedule, methods=['GET', 'POST'])
 
-app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def test():
     if request.method == 'POST':
         # Обработка POST-запроса
