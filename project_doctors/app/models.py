@@ -46,3 +46,18 @@ class Database:
         except Exception as err:
             print("Ошибка при добавлении непредвиденных обстоятельств:", err)
             return False
+        
+    def add_schedule(self, doctor_id, date, shift):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(
+                "INSERT INTO schedules (doctor_id, shift_date, shift_type) VALUES (%s, %s, %s)",
+                (doctor_id, date, shift)
+            )
+            self.conn.commit()
+            cursor.close()
+            print("расписание успешно добавлено!")
+            return True
+        except Exception as err:
+            print("Ошибка при добавлении расписания:", err)
+            return False

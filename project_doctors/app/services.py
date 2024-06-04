@@ -25,20 +25,20 @@ def unforeseen_circumstances(request=request):
             start_date = request.form['start_date']
             end_date = request.form['end_date']
             approved = request.form['approved']
-            Database.add_unforeseen_circumstances(doctor_id, type, start_date, end_date, approved)  
+            db.add_unforeseen_circumstances(doctor_id, type, start_date, end_date, approved)  
             print("Обстоятельства успешно обработаны!")
             return redirect('/')
     except Exception as e:
         print("Обстоятельства не обработаны", e)
 
-def shedule(request):
+def schedule(request=request):
     try:
-        #метод записи  расписания врачей
+        # добавление нового расписания
         if request.method == 'POST':
             doctor_id = request.form['doctor_id']
             date = request.form['date']
             shift = request.form['shift']
-            Database.shedule(doctor_id, date, shift)
+            db.add_schedule(doctor_id, date, shift)
             print("Расписание успешно добавлено!")
             return redirect('/')
     except Exception as e:
