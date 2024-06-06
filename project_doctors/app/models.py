@@ -1,3 +1,4 @@
+import math
 import psycopg2
 from psycopg2 import OperationalError
 
@@ -15,6 +16,25 @@ class Database:
         except OperationalError as err:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
+
+    def add_user(self, name, email, hpsw):
+        try:
+            self.__cur = self.conn.cursor()
+            self.__cur.execute(f"SELECT COUNT(*) FROM users WHERE email LIKE '{email}'")
+            res = self.__cur.fetchone()
+            if res[0] > 0:
+                print(1)
+                print("Пользователь с таким email уже существует")
+                return False
+
+
+            self.__cur.execute("INSERT INTO users(name, email, password) VALUES(%s, %s, %s)", (name, email, hpsw))
+            self.conn.commit()
+            self.__cur.close()
+        except Exception as err:
+            print(f"Ошибка при добавлении пользователя в  БД: {err}")
+            return False
+        return False
 
     def getUser(self):
         try:
