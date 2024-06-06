@@ -3,7 +3,7 @@
 <form action="/login" , method="POST">
   <input type="text" name="email" placeholder="email" required />
   <input type="text" name="psw" placeholder="password" required />
-  <input type="checkbox" name="remainme" required />
+  <input type="checkbox" name="remainme" />
   <input type="submit" value="Войти" />
   <a href="{{url_for('register')}}">Регистрация</a>
 </form>

@@ -1,4 +1,3 @@
-import math
 import psycopg2
 from psycopg2 import OperationalError
 
@@ -49,6 +48,23 @@ class Database:
             print(f"Ошибка при получении данных из БД: {err}")
 
         return False
+
+    def get_user_email(self, email):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute(f"SELECT * FROM users WHERE email = '{email}' LIMIT 1")
+            res = __cur.fetchone()
+            res = res[2]
+            print(res)
+            if not res:
+                print('пользователь не найден')
+                return False
+            
+            return res
+        except Exception as err:
+            print(err)
+        return False
+
     def add_doctor(self, name, specialization, contact):
         # Здесь должен быть код для добавления врача в базу данных
         try:
