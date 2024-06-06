@@ -16,6 +16,19 @@ class Database:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
 
+    def getUser(self):
+        try:
+            self.__cursor = self.conn.cursor()
+            self.__cursor.execute(f"SELECT * FROM users WHERE id = {user_id} LIMIT 1")
+            res = self.__cursor.fetchone()
+            if not res:
+                print('Пользователь не найден')
+                return False
+            return res
+        except Exception as err:
+            print(f"Ошибка при получении данных из БД: {err}")
+
+        return False
     def add_doctor(self, name, specialization, contact):
         # Здесь должен быть код для добавления врача в базу данных
         try:
