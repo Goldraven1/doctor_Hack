@@ -5,7 +5,7 @@ class Database:
     def __init__(self):
         try:
             self.conn = psycopg2.connect(
-                dbname="site",
+                dbname="postgres",
                 user="postgres",
                 host="176.123.160.78",
                 password="kWOWtIb_",
@@ -22,12 +22,11 @@ class Database:
             self.__cur.execute(f"SELECT COUNT(*) FROM users WHERE email LIKE '{email}'")
             res = self.__cur.fetchone()
             if res[0] > 0:
-                print(1)
                 print("Пользователь с таким email уже существует")
                 return False
 
 
-            self.__cur.execute("INSERT INTO users(name, email, password) VALUES(%s, %s, %s)", (name, email, hpsw))
+            self.__cur.execute("INSERT INTO users(name, email, psw) VALUES(%s, %s, %s)", (name, email, hpsw))
             self.conn.commit()
             self.__cur.close()
         except Exception as err:
