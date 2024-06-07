@@ -7,8 +7,8 @@ class Database:
             self.conn = psycopg2.connect(
                 dbname="site",
                 user="postgres",
-                host="95.174.94.146",
-                password="123",
+                host="176.123.160.78",
+                password="kWOWtIb_",
                 port="5432"
             )
             print("Подключение к базе данных успешно!")
@@ -54,8 +54,6 @@ class Database:
             __cur = self.conn.cursor()
             __cur.execute(f"SELECT * FROM users WHERE email = '{email}' LIMIT 1")
             res = __cur.fetchone()
-            res = res[2]
-            print(res)
             if not res:
                 print('пользователь не найден')
                 return False

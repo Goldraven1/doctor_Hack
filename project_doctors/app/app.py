@@ -4,16 +4,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, login_user 
 from UserLogin import UserLogin
-
 from models import Database 
+
 db = Database()
 
 
 app = Flask(__name__)
 Bootstrap(app)
-app.config['SECRET_KEY'] = '4aa58657559c70f9956627007f99e93a2daf4f32'
-login_manager = LoginManager(app)
 
+app.config['SECRET_KEY'] = '4aa58657559c70f9956627007f99e93a2daf4f32'
+
+login_manager = LoginManager(app)
 
 # Свяжите функции с маршрутами Flask
 app.add_url_rule('/add_doctor', view_func=doctor, methods=['GET', 'POST'])
@@ -31,7 +32,7 @@ def load_user(user_id):
 def login():
     if request.method == 'POST':
         user = db.get_user_email(request.form['email'])
-        if user and check_password_hash(user['psw'], request.form['psw']):
+        if user and check_password_hash(psw_from_db, request.form['psw']):
             UserLogin = UserLogin().create(user)
             login_user(UserLogin)
             return redirect('test')
