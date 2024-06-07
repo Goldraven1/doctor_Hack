@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request
 from services import doctor, unforeseen_circumstances, schedule, del_doctor
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_required, login_user 
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user 
 from UserLogin import UserLogin
 from models import Database 
 
@@ -27,15 +27,13 @@ app.add_url_rule('/delete_doctor', view_func=del_doctor, methods=['GET', 'POST']
 def load_user(user_id):
     return UserLogin().fromDB(user_id, db)
 
-
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         user = db.get_user_email(request.form['email'])
-        if user and check_password_hash(psw_from_db, request.form['psw']):
-            UserLogin = UserLogin().create(user)
-            login_user(UserLogin)
-            return redirect('test')
+        if user and check_password_hash(user[3], request.form['psw']):
+            login_user(UserLogin().create(user))
+            return redirect('/')
         
         else:
             print("неверная пара логин/пароль")
@@ -66,6 +64,20 @@ def test():
         return redirect(url_for('test'))  
     else:
         return render_template('test.html', title='test Page')
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    print('выход из аккакунта')
+    return redirect(url_for('login'))
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    return f"""<p><a href="{url_for('logout')}">Выйти из профиля</a>
+        </p>user info: {current_user.get_id()}"""
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=5000)

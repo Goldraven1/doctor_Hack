@@ -34,7 +34,7 @@ class Database:
             return False
         return False
 
-    def getUser(self):
+    def getUser(self, user_id):
         try:
             self.__cursor = self.conn.cursor()
             self.__cursor.execute(f"SELECT * FROM users WHERE id = {user_id} LIMIT 1")
