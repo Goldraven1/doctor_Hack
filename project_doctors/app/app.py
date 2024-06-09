@@ -28,7 +28,7 @@ def load_user(user_id):
     return UserLogin().fromDB(user_id, db)
 
 @app.route('/login', methods=['POST', 'GET'])
-def login():
+def login(request=request):
     if request.method == 'POST':
         user = db.get_user_email(request.form['email'])
         if user and check_password_hash(user[3], request.form['psw']):

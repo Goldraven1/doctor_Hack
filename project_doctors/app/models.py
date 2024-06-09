@@ -16,6 +16,26 @@ class Database:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
 
+    def get_all_doctors(self):
+        try:
+            self.__cur = self.conn.cursor()
+            self.__cur.execute("SELECT name, modality, additional_modality, rate FROM doctor_schedule WHERE rate > 0")
+            res = self.__cur.fetchall()
+            return res
+        except Exception as err:
+            print(f"Ошибка: {err}")
+            return False
+
+    def get_week_reseach(self):
+        try:
+            self.__cur = self.conn.cursor()
+            self.__cur.execute(f"SELECT * FROM monthly_research LIMIT 1")
+            res = self.__cur.fetchall()
+            return res
+        except Exception as err:
+            print(f"Ошибка: {err}")
+            return False
+        
     def add_user(self, name, email, hpsw):
         try:
             self.__cur = self.conn.cursor()
