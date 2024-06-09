@@ -8,9 +8,6 @@ class plan():
     def __init__(self, week_reseach):
         self.week_reseach = week_reseach
 
-    def show(self):
-        print(self.week_reseach)
-
     def get(self):
         w_r = self.week_reseach[0]
         w_r = w_r[3:]
@@ -20,7 +17,6 @@ class plan():
 week_research = db.get_week_reseach()
 
 plan_ = plan(week_research)
-plan_.show()
 plan__ = plan_.get()
 print(plan__)
 
@@ -38,54 +34,55 @@ print(plan__)
         
 
 class employee_doctor():
-    def __init__(self, rate, modality):
+    def __init__(self, rate):
         self.rate = rate
-        self. modality = modality
+        # self. modality = modality
 
     def rate_calc(self):
         if self.rate == 1:
             doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
             doc_time_chill = 1
-            doc_N = 181
-            doc_power = doc_time_work * doc_N
-            return [doc_time_work, doc_time_chill, doc_power]
+            doc_power_hour = 181 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
         elif self.rate == 0.75:
             doc_time_work = 6
             doc_time_chill = 30
-            doc_N = 181
-            doc_power = doc_time_work * doc_N
-            return 0.75
-    
+            doc_power_hour =  181 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
 
-    def get_doc_health(self):
-        pass
-    
-    def get_doc_power(self):
-        pass
-em = employee_doctor(1)
-arr = em.rate_calc()
-print(arr)
+
+
 
 class calculate_the_schedule():
     def __init__(self, doctors):
         self.doctors = doctors
 
-    def show(self):
+    def calc(self):
         quantity_research_kt = plan__[1]
         doc_power = 100
 
-        for i in self.doctors:
+        for i in self.doctors :
             if i[1] == 'КТ':
                 if quantity_research_kt > 0:
                     quantity_research_kt -= doc_power
                     # self.doc_health -= 8
-                print(f"rate = {i[3]}")
+                if quantity_research_kt < 0:
+                    r = 0
+                    r += quantity_research_kt
+                    quantity_research_kt = 0
+                    print(r)
+                    print('this doctor')
+                rate = i[3]
+                em = employee_doctor(rate)
+                arr = em.rate_calc()
+                print(arr)
                 print(quantity_research_kt)
                 
+                
 
-# doctors = db.get_all_doctors()
-# doc_calc = calculate_the_schedule(doctors)
-# doc_calc.show()
+doctors = db.get_all_doctors()
+doc_calc = calculate_the_schedule(doctors)
+doc_calc.calc()
 
 # class implementation_schedule(employee_doctor):
 #     def __init__(self, p, d) :
