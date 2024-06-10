@@ -16,6 +16,16 @@ class Database:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
 
+    def add_schedule_doc(self, name, schedule):
+        try:
+            day = 'day1'
+            self.__cur = self.conn.cursor()
+            self.__cur.execute(f"INSERT INTO complete_schedule(name, {day}) VALUES(%s, %s)", (name, schedule))
+            self.conn.commit()
+            self.__cur.close()
+        except Exception as err:
+            print(f"Ошибка: {err}")
+            return False
     def get_all_doctors(self):
         try:
             self.__cur = self.conn.cursor()

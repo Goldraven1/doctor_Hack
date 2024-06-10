@@ -49,6 +49,16 @@ class employee_doctor():
             doc_time_chill = 30
             doc_power_hour =  181 // 8
             return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.5:
+            doc_time_work = 4
+            doc_time_chill = 15
+            doc_power_hour =  181 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.25:
+            doc_time_work = 2
+            doc_time_chill = 0
+            doc_power_hour =  181 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
 
 
 
@@ -59,24 +69,35 @@ class calculate_the_schedule():
 
     def calc(self):
         quantity_research_kt = plan__[1]
-        doc_power = 100
 
         for i in self.doctors :
             if i[1] == 'КТ':
                 if quantity_research_kt > 0:
+                    rate = i[3]
+                    em = employee_doctor(rate)
+                    arr = em.rate_calc()
+
+                    doc_power = arr[2] * arr[0]
                     quantity_research_kt -= doc_power
-                    # self.doc_health -= 8
+
+                    name = i[0]
+                    start_time = "8:30"
+                    end_time = int(start_time[0]) + arr[0]
+                    end_time = f"{end_time} : 30"
+                    chill = arr[1]
+                    schedule = f"начало = {start_time} конец = {end_time} отдых = {chill}"
+                    db.add_schedule_doc(name, schedule)
                 if quantity_research_kt < 0:
                     r = 0
                     r += quantity_research_kt
                     quantity_research_kt = 0
                     print(r)
                     print('this doctor')
-                rate = i[3]
-                em = employee_doctor(rate)
-                arr = em.rate_calc()
-                print(arr)
-                print(quantity_research_kt)
+                # rate = i[3]
+                # em = employee_doctor(rate)
+                # arr = em.rate_calc()
+                # print(arr)
+                # print(quantity_research_kt)
                 
                 
 
