@@ -21,27 +21,14 @@ plan__ = plan_.get()
 print(plan__)
 
 
-# for i in plan__:
-#     print(i)
-
-
-# class Rules():
-#     def __init__(self, norm_hours_month, norm_hours_schedule, max_hours_week):
-#         self.max_hours_month = norm_hours_month
-#         self.norm_hours_schedule = norm_hours_schedule
-#         self.max_hours_week = max_hours_week
-#         self.norm_hours_schedule = 
-        
-
 class employee_doctor():
     def __init__(self, rate):
         self.rate = rate
-        # self. modality = modality
 
-    def rate_calc(self):
+    def rate_calc_without_ky(self):
         if self.rate == 1:
             doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
-            doc_time_chill = 1
+            doc_time_chill = 60
             doc_power_hour = 181 // 8
             return [doc_time_work, doc_time_chill, doc_power_hour]
         elif self.rate == 0.75:
@@ -51,13 +38,57 @@ class employee_doctor():
             return [doc_time_work, doc_time_chill, doc_power_hour]
         elif self.rate == 0.5:
             doc_time_work = 4
-            doc_time_chill = 15
+            doc_time_chill = 30
             doc_power_hour =  181 // 8
             return [doc_time_work, doc_time_chill, doc_power_hour]
         elif self.rate == 0.25:
             doc_time_work = 2
-            doc_time_chill = 0
+            doc_time_chill = 15
             doc_power_hour =  181 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+
+    def rate_calc_with_ky(self):
+        if self.rate == 1:
+            doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
+            doc_time_chill = 1
+            doc_power_hour = 165 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.75:
+            doc_time_work = 6
+            doc_time_chill = 30
+            doc_power_hour =  165 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.5:
+            doc_time_work = 4
+            doc_time_chill = 30
+            doc_power_hour =  165 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.25:
+            doc_time_work = 2
+            doc_time_chill = 15
+            doc_power_hour =  165 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        
+    def rate_calc_with_ky_2_plus(self):
+        if self.rate == 1:
+            doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
+            doc_time_chill = 1
+            doc_power_hour = 155 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.75:
+            doc_time_work = 6
+            doc_time_chill = 30
+            doc_power_hour =  155 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.5:
+            doc_time_work = 4
+            doc_time_chill = 30
+            doc_power_hour =  155 // 8
+            return [doc_time_work, doc_time_chill, doc_power_hour]
+        elif self.rate == 0.25:
+            doc_time_work = 2
+            doc_time_chill = 15
+            doc_power_hour =  155 // 8
             return [doc_time_work, doc_time_chill, doc_power_hour]
 
 
@@ -69,13 +100,16 @@ class calculate_the_schedule():
 
     def calc(self):
         quantity_research_kt = plan__[1]
+        quantity_research_kt_ky_1 = plan__[2]
+        duty_arr = []
+        
 
         for i in self.doctors :
             if i[1] == 'КТ':
                 if quantity_research_kt > 0:
                     rate = i[3]
                     em = employee_doctor(rate)
-                    arr = em.rate_calc()
+                    arr = em.rate_calc_without_ky()
 
                     doc_power = arr[2] * arr[0]
                     quantity_research_kt -= doc_power
@@ -83,76 +117,58 @@ class calculate_the_schedule():
                     name = i[0]
                     start_time = "8:30"
                     end_time = int(start_time[0]) + arr[0]
+                    end_time = f"{end_time}:30"
+                    chill = arr[1]
+                    schedule = f"{start_time} - {end_time} перерыв: {chill}"
+                    # db.add_schedule_doc(name, schedule)
+                if quantity_research_kt < 0:
+                    remainder = 0
+                    remainder += quantity_research_kt
+                    remainder = -remainder
+                    quantity_research_kt = 0
+
+                    doc = i[0]
+                    current_numb = doc[-1]
+                    current_numb = int(current_numb) - 1
+                    current_numb = str(current_numb)
+                    doc = doc[0:6] + current_numb
+                    duty_doc = {
+                        "doc": doc,
+                        "remainder": remainder
+                    }
+                    duty_arr.append(duty_doc)
+                    
+
+                if quantity_research_kt_ky_1 > 0:
+                    rate = i[3]
+                    em = employee_doctor(rate)
+                    arr = em.rate_calc_with_ky()
+
+                    doc_power = arr[2] * arr[0]
+                    quantity_research_kt_ky_1 -= doc_power
+                    
+                    name = i[0]
+                    start_time = "8:30"
+                    end_time = int(start_time[0]) + arr[0]
                     end_time = f"{end_time} : 30"
                     chill = arr[1]
                     schedule = f"начало = {start_time} конец = {end_time} отдых = {chill}"
-                    db.add_schedule_doc(name, schedule)
-                if quantity_research_kt < 0:
-                    r = 0
-                    r += quantity_research_kt
-                    quantity_research_kt = 0
-                    print(r)
-                    print('this doctor')
-                # rate = i[3]
-                # em = employee_doctor(rate)
-                # arr = em.rate_calc()
-                # print(arr)
-                # print(quantity_research_kt)
-                
-                
+                    print(schedule)
+                    print(quantity_research_kt_ky_1)
+                    # db.add_schedule_doc(name, schedule)
+                if quantity_research_kt_ky_1 < 0:
+                    remainder = 0
+                    remainder += quantity_research_kt_ky_1
+                    remainder = -remainder
+                    quantity_research_kt_ky_1 = 0
+
+                    doc = i[0]
+                    current_numb = doc[-1]
+                    current_numb = int(current_numb) - 1
+                    current_numb = str(current_numb)
+                    doc = doc[0:6] + current_numb
+                    print('this doctor', doc )
 
 doctors = db.get_all_doctors()
 doc_calc = calculate_the_schedule(doctors)
 doc_calc.calc()
-
-# class implementation_schedule(employee_doctor):
-#     def __init__(self, p, d) :
-#         self.p = p
-#         self.d = d
-
-#     def show(self):
-#         return super().show()
-
-# em = employee_doctor('ФИО', 'rg', ['kt', 'mmg', 'flg', 'dens'], 1, 181)
-# em.show()
-
-# p = plan(1970, 4437, 508, 541, 19061, 1675, 817, 14, 67021, 40364)
-# d = employee_doctor('ФИО', 'rg', ['kt', 'mmg', 'flg', 'dens'], 1, 181)
-
-# im = implementation_schedule(p, d)
-
-
-    # def choose_doc_dens(self):
-        # for i in self.d:
-            # print(i)
-        # print(self.p)
-        # print(self.d.modality)
-
-# print(implementation_schedule(p, d).choose_doc_dens())
-# modality = d.modality
-# print(modality)
-# print(p['rg'])
-
-# count = 0
-# arr = []
-# day_doc = 1
-# start_doc_hours = 8
-# start_doc_min = 30
-# end_doc_hours = 20
-# end_doc_min = 30
-# year = datetime.datetime.now().year
-# month = datetime.datetime.now().month
-# while p.dens > count:
-#     p.dens -= d.doc_power
-#     if d.rate == 1:
-#         start_date = datetime.datetime(year, month, day_doc, start_doc_hours, start_doc_min)
-#         end_date = datetime.datetime(year, month, day_doc, end_doc_hours, end_doc_min)
-
-#         # start_date = datetime.datetime.strptime(f"6/{day_doc}/24", "%m/%d/%y")
-#         day_doc += 1
-#         # end_date = start_date + datetime.timedelta(days=1)
-#         print(start_date)
-#         print(end_date)
-# print(p.dens)
-
-
