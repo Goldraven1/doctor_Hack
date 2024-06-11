@@ -27,28 +27,23 @@ class employee_doctor():
         if self.rate == 1:
             doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
             doc_time_chill = 60
-            doc_power_hour = 20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
+            return [doc_time_work, doc_time_chill]
         elif self.rate == 0.75:
             doc_time_work = 6
             doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
+            return [doc_time_work, doc_time_chill]
         elif self.rate == 0.5:
             doc_time_work = 4
             doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
+            return [doc_time_work, doc_time_chill]
         elif self.rate == 0.25:
             doc_time_work = 2
             doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
+            return [doc_time_work, doc_time_chill]
         elif self.rate == 0.1:
             doc_time_work = 2
             doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
+            return [doc_time_work, doc_time_chill]
 
 
     def rate_calc_with_ky(self):
@@ -117,7 +112,7 @@ class calculate_work_days():
         quantity_research_dens = plan__[0]
         quantity_research_kt = plan__[1]
         quantity_research_kt_ky_1 = plan__[2]
-        quantity_research_kt_ky_2 = plan__[3]
+        quantity_research_kt_ky_2 = 100 # plan__[3]
         quantity_research_mmg = plan__[4]
         quantity_research_mrt = plan__[5]
         quantity_research_mrt_ky_1 = plan__[6]
@@ -125,6 +120,30 @@ class calculate_work_days():
         quantity_research_rg = plan__[8]
         quantity_research_flg = plan__[9]
         # duty_arr = []
+        doc_power_without_ky = {
+                "kt": 15.6,
+                "mrt": 12,
+                "rg": 49.2,
+                "flg": 181,
+                "mmg": 49.2,
+                "dens": 84
+            }
+        doc_power_with_ky = {
+                "kt": 9,
+                "mrt": 8,
+                "rg": 31.98,
+                "flg": 117.65,
+                "mmg": 31.98,
+                "dens": 54.6
+            }
+        doc_power_with_ky_2_plus = {
+                "kt": 8.58,
+                "mrt": 6.6,
+                "rg": 27.06,
+                "flg": 99.5,
+                "mmg": 27.06,
+                "dens": 46.2
+            }
 
         while quantity_research_kt > 0:
             for i in self.doctors:
@@ -137,12 +156,13 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_kt -= doc_power
-
+                            doc_power = doc_power_without_ky['kt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
+                            
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_kt -= doc_power
+                                print(doctor_name, 'day + doc')
 
                             print(quantity_research_kt, "quantity_research_kt")
         while quantity_research_kt_ky_1 > 0:
@@ -156,13 +176,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_with_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_kt_ky_1 -= doc_power
-
+                            doc_power = doc_power_with_ky['kt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_kt_ky_1 -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
 
                             print(quantity_research_kt_ky_1, "quantity_research_kt_ky_1")
 
@@ -177,13 +198,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_with_ky_2_plus()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_kt_ky_2 -= doc_power
-
+                            doc_power = doc_power_with_ky_2_plus['kt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_kt_ky_2 -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
 
                             print(quantity_research_kt_ky_2, "quantity_research_kt_ky_2")
 
@@ -198,13 +220,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_mmg -= doc_power
-
+                            doc_power = doc_power_without_ky['mmg']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_mmg -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
 
                             print(quantity_research_mmg, "quantity_research_mmg")
                         
@@ -219,13 +242,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_mrt -= doc_power
-
+                            doc_power = doc_power_without_ky['mrt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_mrt -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
                         
                             print(quantity_research_mrt, "quantity_research_mrt")
 
@@ -241,13 +265,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_with_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_mrt_ky_1 -= doc_power
-
+                            doc_power = doc_power_with_ky['mrt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_mrt_ky_1 -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
                         
                             print(quantity_research_mrt_ky_1, "quantity_research_mrt_ky_1")
 
@@ -262,13 +287,14 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_with_ky_2_plus()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_mrt_ky_2 -= doc_power
-
+                            doc_power = doc_power_with_ky_2_plus['mrt']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_mrt_ky_2 -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
                         
                             print(quantity_research_mrt_ky_2, "quantity_research_mrt_ky_2")
                         
@@ -285,13 +311,13 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_rg -= doc_power
-
+                            doc_power = doc_power_without_ky['rg']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_rg -= doc_power
+                                print(doctor_name, 'day + doc')
                         
                             print(quantity_research_rg, "quantity_research_rg")
 
@@ -307,13 +333,13 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_flg -= doc_power
-
+                            doc_power = doc_power_without_ky['flg']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_flg -= doc_power
+                                print(doctor_name, 'day + doc')
                         
                         print(quantity_research_flg, "quantity_research_flg")
         
@@ -330,20 +356,18 @@ class calculate_work_days():
                             rate = i[3]
                             em = employee_doctor(rate)
                             doc_capabilities = em.rate_calc_without_ky()
-
-                            doc_power = doc_capabilities[2] * doc_capabilities[0]
-                            quantity_research_dens -= doc_power
-
+                            doc_power = doc_power_without_ky['dens']
                             doctor_name = i[0]
-                            db.add_work_day(doctor_name, rate)
-                            print(doctor_name, 'day + doc')
-                        
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_dens -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
                             print(quantity_research_dens, "| quantity_research_dens")
 
 
         
 doctors = db.get_all_doctors()
 doc_calc = calculate_work_days(doctors)
-# doc_calc.calc()
-
-# чекать дб и если + день, то минусуем, а иначе оставляем хп, как есть
+doc_calc.calc()
