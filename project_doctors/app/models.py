@@ -16,16 +16,28 @@ class Database:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
 
-    def add_schedule_doc(self, name, schedule):
+    # def add_schedule_doc(self, name, schedule):
+    #     try:
+    #         day = 'day1'
+    #         self.__cur = self.conn.cursor()
+    #         self.__cur.execute(f"INSERT INTO complete_schedule(name, {day}) VALUES(%s, %s)", (name, schedule))
+    #         self.conn.commit()
+    #         self.__cur.close()
+    #     except Exception as err:
+    #         print(f"Ошибка: {err}")
+    #         return False
+    
+
+    def add_work_day(self, doctor_name):
         try:
-            day = 'day1'
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"INSERT INTO complete_schedule(name, {day}) VALUES(%s, %s)", (name, schedule))
+            self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1 WHERE name = '{doctor_name}'")
             self.conn.commit()
             self.__cur.close()
         except Exception as err:
             print(f"Ошибка: {err}")
             return False
+
     def get_all_doctors(self):
         try:
             self.__cur = self.conn.cursor()
@@ -36,7 +48,7 @@ class Database:
             print(f"Ошибка: {err}")
             return False
 
-    def get_week_reseach(self):
+    def get_week_research(self):
         try:
             self.__cur = self.conn.cursor()
             self.__cur.execute(f"SELECT * FROM monthly_research LIMIT 1")
