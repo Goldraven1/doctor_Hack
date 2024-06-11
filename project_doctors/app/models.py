@@ -28,12 +28,37 @@ class Database:
     #         return False
     
 
-    def add_work_day(self, doctor_name):
+    def add_work_day(self, doctor_name, rate):
         try:
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1 WHERE name = '{doctor_name}'")
-            self.conn.commit()
-            self.__cur.close()
+            self.__cur.execute(f"SELECT days FROM work_days_doc WHERE name = '{doctor_name}'")
+            work_days = self.__cur.fetchall()
+            work_days = work_days[0]
+            work_days = work_days[0]
+            print(work_days)
+            self.__cur.execute(f"SELECT rate FROM work_days_doc WHERE name = '{doctor_name}'")
+            rate_doc = self.__cur.fetchall()
+            rate_doc = rate_doc[0]
+            rate_doc = rate_doc[0]
+            print(rate_doc)
+            if work_days < 5 and rate_doc == 1:
+                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                self.conn.commit()
+                self.__cur.close()
+                return True
+            elif work_days < 5 and rate_doc == 0.75:
+                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                self.conn.commit()
+                self.__cur.close()
+                return True
+            elif work_days < 5:
+                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                self.conn.commit()
+                self.__cur.close()
+                return True
         except Exception as err:
             print(f"Ошибка: {err}")
             return False
