@@ -115,8 +115,8 @@ class calculate_work_days():
         quantity_research_kt_ky_2 = 100 # plan__[3]
         quantity_research_mmg = plan__[4]
         quantity_research_mrt = plan__[5]
-        quantity_research_mrt_ky_1 = plan__[6]
-        quantity_research_mrt_ky_2 = plan__[7]
+        quantity_research_mrt_ky_1 = 100# plan__[6]
+        quantity_research_mrt_ky_2 = 30# plan__[7]
         quantity_research_rg = plan__[8]
         quantity_research_flg = plan__[9]
         # duty_arr = []
@@ -144,6 +144,72 @@ class calculate_work_days():
                 "mmg": 27.06,
                 "dens": 46.2
             }
+
+        while quantity_research_flg > 0:
+            for i in self.doctors:
+                str_extra_modality = i[2]
+                if type(str_extra_modality) == str:
+                    doc_extra_modality = str_extra_modality.split(',')
+            
+                for s in doc_extra_modality:
+                    if i[1] == 'ФЛГ' or (s == ' ФЛГ'):
+                        if quantity_research_flg > 0:
+                            rate = i[3]
+                            em = employee_doctor(rate)
+                            doc_capabilities = em.rate_calc_without_ky()
+                            doc_power = doc_power_without_ky['flg']
+                            doctor_name = i[0]
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_flg -= doc_power
+                                print(doctor_name, 'day + doc')
+                        
+                        print(quantity_research_flg, "quantity_research_flg")
+
+        while quantity_research_rg > 0:
+            for i in self.doctors:
+                str_extra_modality = i[2]
+                if type(str_extra_modality) == str:
+                    doc_extra_modality = str_extra_modality.split(',')
+                
+                for s in doc_extra_modality:
+                    if i[1] == 'РГ' or (s == ' РГ'):
+                        if quantity_research_rg > 0:
+                            rate = i[3]
+                            em = employee_doctor(rate)
+                            doc_capabilities = em.rate_calc_without_ky()
+                            doc_power = doc_power_without_ky['rg']
+                            doctor_name = i[0]
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_rg -= doc_power
+                                print(doctor_name, 'day + doc')
+                        
+                            print(quantity_research_rg, "quantity_research_rg")
+
+        while quantity_research_dens > 0:
+            for i in self.doctors:
+                str_extra_modality = i[2]
+                if type(str_extra_modality) == str:
+                    doc_extra_modality = str_extra_modality.split(',')
+
+                for s in doc_extra_modality:
+                    if (i[1] == 'Денситометрия') or (s == ' Денситометрия'):
+                        if quantity_research_dens > 0:
+                            rate = i[3]
+                            em = employee_doctor(rate)
+                            doc_capabilities = em.rate_calc_without_ky()
+                            doc_power = doc_power_without_ky['dens']
+                            doctor_name = i[0]
+
+                            answer = db.add_work_day(doctor_name, rate)
+                            if answer != 0:
+                                quantity_research_dens -= doc_power
+                                print(doctor_name, 'day + doc')
+                            
+                            print(quantity_research_dens, "| quantity_research_dens")
 
         while quantity_research_kt > 0:
             for i in self.doctors:
@@ -297,75 +363,6 @@ class calculate_work_days():
                             
                         
                             print(quantity_research_mrt_ky_2, "quantity_research_mrt_ky_2")
-                        
-        
-        while quantity_research_rg > 0:
-            for i in self.doctors:
-                str_extra_modality = i[2]
-                if type(str_extra_modality) == str:
-                    doc_extra_modality = str_extra_modality.split(',')
-                
-                for s in doc_extra_modality:
-                    if i[1] == 'РГ' or (s == ' РГ'):
-                        if quantity_research_rg > 0:
-                            rate = i[3]
-                            em = employee_doctor(rate)
-                            doc_capabilities = em.rate_calc_without_ky()
-                            doc_power = doc_power_without_ky['rg']
-                            doctor_name = i[0]
-
-                            answer = db.add_work_day(doctor_name, rate)
-                            if answer != 0:
-                                quantity_research_rg -= doc_power
-                                print(doctor_name, 'day + doc')
-                        
-                            print(quantity_research_rg, "quantity_research_rg")
-
-        while quantity_research_flg > 0:
-            for i in self.doctors:
-                str_extra_modality = i[2]
-                if type(str_extra_modality) == str:
-                    doc_extra_modality = str_extra_modality.split(',')
-            
-                for s in doc_extra_modality:
-                    if i[1] == 'ФЛГ' or (s == ' ФЛГ'):
-                        if quantity_research_flg > 0:
-                            rate = i[3]
-                            em = employee_doctor(rate)
-                            doc_capabilities = em.rate_calc_without_ky()
-                            doc_power = doc_power_without_ky['flg']
-                            doctor_name = i[0]
-
-                            answer = db.add_work_day(doctor_name, rate)
-                            if answer != 0:
-                                quantity_research_flg -= doc_power
-                                print(doctor_name, 'day + doc')
-                        
-                        print(quantity_research_flg, "quantity_research_flg")
-        
-
-        while quantity_research_dens > 0:
-            for i in self.doctors:
-                str_extra_modality = i[2]
-                if type(str_extra_modality) == str:
-                    doc_extra_modality = str_extra_modality.split(',')
-
-                for s in doc_extra_modality:
-                    if (i[1] == 'Денситометрия') or (s == ' Денситометрия'):
-                        if quantity_research_dens > 0:
-                            rate = i[3]
-                            em = employee_doctor(rate)
-                            doc_capabilities = em.rate_calc_without_ky()
-                            doc_power = doc_power_without_ky['dens']
-                            doctor_name = i[0]
-
-                            answer = db.add_work_day(doctor_name, rate)
-                            if answer != 0:
-                                quantity_research_dens -= doc_power
-                                print(doctor_name, 'day + doc')
-                            
-                            print(quantity_research_dens, "| quantity_research_dens")
-
 
         
 doctors = db.get_all_doctors()
