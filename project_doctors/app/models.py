@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import OperationalError
+from sqlalchemy import create_engine, text
 
 class Database:
     def __init__(self):
@@ -11,10 +12,12 @@ class Database:
                 password="kWOWtIb_",
                 port="5432"
             )
+            self.engine = create_engine('postgresql://postgres:kWOWtIb_@176.123.160.78/postgres')
             print("Подключение к базе данных успешно!")
         except OperationalError as err:
             print("Подключение к базе данных не удалось:", err)
             self.conn = None
+            self.engine = None
 
     # def add_schedule_doc(self, name, schedule):
     #     try:
@@ -189,3 +192,29 @@ class Database:
         except Exception as err:
             print("Ошибка при добавлении расписания:", err)
             return False
+        
+    def create_role(self):
+            if not self.engine:
+                print("Отсутствует подключение к базе данных")
+                return False
+            
+            try:
+                with self.engine.begin() as connection:
+                    connection.execute(text("CREATE ROLE head_of_the_center_reference WITH LOGIN PASSWORD '12345';"))
+                    connection.execute(text("CREATE ROLE hr_worker;"))
+                    connection.execute(text("CREATE ROLE doctor;"))
+                    print("Роли успешно созданы")
+
+                    connection.execute(text("INSERT INTO users (name, email, psw) VALUES ('head_of_the_center_reference', 'head@center.com', '12345');"))
+                    connection.execute(text("INSERT INTO users (name, email, psw) VALUES ('hr_worker', 'hr@worker.com', NULL);"))
+                    connection.execute(text("INSERT INTO users (name, email, psw) VALUES ('doctor', 'doctor@hospital.com', NULL);"))
+                    print("Пользователи успешно созданы!")
+                    
+                    return True
+            except Exception as err:
+                print("Ошибка при создании ролей и пользователей:", err)
+                return False
+      
+
+
+            
