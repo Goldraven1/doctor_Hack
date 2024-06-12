@@ -31,6 +31,7 @@ class Database:
     def add_work_day(self, doctor_name, rate):
         try:
             self.__cur = self.conn.cursor()
+            
             self.__cur.execute(f"SELECT days FROM work_days_doc WHERE name = '{doctor_name}'")
             work_days = self.__cur.fetchall()
             work_days = work_days[0]
