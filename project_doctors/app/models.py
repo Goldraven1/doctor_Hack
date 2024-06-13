@@ -19,9 +19,38 @@ class Database:
             self.conn = None
             self.engine = None
 
-    # def add_schedule_doc(self, name, schedule):
+    
+    def get_work_days_doctors(self):
+        try:
+            self.__cur = self.conn.cursor()
+            self.__cur.execute(f"SELECT name, days, rate FROM work_days_doc")
+            res = self.__cur.fetchall()
+            return res
+        except Exception as err:
+            print('error: ', err)
+            return False
+        
+    def add_schedule_doc(self, doc, lst_days, doc_schedule):
+        try:
+            for day_ in lst_days:
+                day = 'day' + str(day_)
+                start_time = '8:30'
+                end_time = (510 + (doc_schedule[0] * 60) + doc_schedule[1]) / 60
+                if int(end_time * 10) % 10 != 0:
+                    end_time = round(end_time)
+                    end_time = f"{end_time}:30"
+                
+                self.__cur = self.conn.cursor()
+                self.__cur.execute(f"UPDATE complete_schedule SET {day} = '{start_time} - {end_time}, отдых = {doc_schedule[1]}' WHERE name = '{doc}'")
+                self.conn.commit()
+                self.__cur.close()
+        except Exception as err:
+            print('error: ', err)
+            return False
+        
+
+    # def add_schedule_doc(self, doc, lst_days, doc_schedule):
     #     try:
-    #         day = 'day1'
     #         self.__cur = self.conn.cursor()
     #         self.__cur.execute(f"INSERT INTO complete_schedule(name, {day}) VALUES(%s, %s)", (name, schedule))
     #         self.conn.commit()
@@ -216,5 +245,3 @@ class Database:
                 return False
       
 
-
-            

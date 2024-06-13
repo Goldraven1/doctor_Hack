@@ -1,4 +1,5 @@
 import datetime
+import random
 from models import Database
 
 db = Database()
@@ -23,7 +24,7 @@ class employee_doctor():
     def __init__(self, rate):
         self.rate = rate
 
-    def rate_calc_without_ky(self):
+    def rate_calc(self):
         if self.rate == 1:
             doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
             doc_time_chill = 60
@@ -44,62 +45,6 @@ class employee_doctor():
             doc_time_work = 2
             doc_time_chill = 15
             return [doc_time_work, doc_time_chill]
-
-
-    def rate_calc_with_ky(self):
-        if self.rate == 1:
-            doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
-            doc_time_chill = 1
-            doc_power_hour = 20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.75:
-            doc_time_work = 6
-            doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.5:
-            doc_time_work = 4
-            doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.25:
-            doc_time_work = 2
-            doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.1:
-            doc_time_work = 2
-            doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-
-        
-    def rate_calc_with_ky_2_plus(self):
-        if self.rate == 1:
-            doc_time_work = 8 # больше 8, но так, чтоб не больше 12 в неделю
-            doc_time_chill = 1
-            doc_power_hour = 20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.75:
-            doc_time_work = 6
-            doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.5:
-            doc_time_work = 4
-            doc_time_chill = 30
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.25:
-            doc_time_work = 2
-            doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
-        elif self.rate == 0.1:
-            doc_time_work = 2
-            doc_time_chill = 15
-            doc_power_hour =  20 // doc_time_work
-            return [doc_time_work, doc_time_chill, doc_power_hour]
 
 
 
@@ -367,4 +312,48 @@ class calculate_work_days():
         
 doctors = db.get_all_doctors()
 doc_calc = calculate_work_days(doctors)
-doc_calc.calc()
+# doc_calc.calc()
+
+
+
+work_days_doctors = db.get_work_days_doctors()
+
+class calculate_schedule():
+    def __init__(self, work_days_doctors):
+        self.work_days_doctors = work_days_doctors
+
+    def calc(self):
+        for i in work_days_doctors:
+            doc = i[0]
+            work_days = i[1]
+            rate = i[2]
+            while work_days > 0:
+                    check = False
+                    while check == False:
+                        lst_days = [random.randint(1, 7) for k in range(work_days)] 
+                        s = set(lst_days)
+                        if len(lst_days) == len(s):
+                            lst_days.sort()
+                            if 2 not in lst_days and len(lst_days) == work_days:
+                                if 1 not in lst_days:
+                                    check = True
+                            if 7 not in lst_days and len(lst_days) == work_days:
+                                if 6 not in lst_days:
+                                    check = True
+                            last = 1000000000000000000000000000
+                            for i in lst_days:
+                                if i - last >= 3:
+                                    check = True
+                                last = i
+                        else:
+                            check = False
+                    work_days = 0
+                
+            em = employee_doctor(rate)
+            doc_schedule = em.rate_calc()
+
+            db.add_schedule_doc(doc, lst_days, doc_schedule)
+            
+
+calc_schedule = calculate_schedule(work_days_doctors)
+calc_schedule.calc()
