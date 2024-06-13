@@ -23,7 +23,7 @@ class Database:
     def get_work_days_doctors(self):
         try:
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"SELECT name, days, rate FROM work_days_doc")
+            self.__cur.execute(f"SELECT name, days1, rate FROM work_days_doc")
             res = self.__cur.fetchall()
             return res
         except Exception as err:
@@ -47,19 +47,7 @@ class Database:
         except Exception as err:
             print('error: ', err)
             return False
-        
-
-    # def add_schedule_doc(self, doc, lst_days, doc_schedule):
-    #     try:
-    #         self.__cur = self.conn.cursor()
-    #         self.__cur.execute(f"INSERT INTO complete_schedule(name, {day}) VALUES(%s, %s)", (name, schedule))
-    #         self.conn.commit()
-    #         self.__cur.close()
-    #     except Exception as err:
-    #         print(f"Ошибка: {err}")
-    #         return False
     
-
     def add_work_day(self, doctor_name, rate):
         try:
             self.__cur = self.conn.cursor()
@@ -106,10 +94,10 @@ class Database:
             print(f"Ошибка: {err}")
             return False
 
-    def get_week_research(self):
+    def get_weeks_research(self):
         try:
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"SELECT * FROM monthly_research LIMIT 1")
+            self.__cur.execute("SELECT densitometer, kt, kt_ky_1_zone,kt_ky_2_plus_zone, mmg, mrt, mrt_ky_1_zone, mrt_ky_2_plus_zone, rg, fluorography FROM monthly_research")
             res = self.__cur.fetchall()
             return res
         except Exception as err:
@@ -132,7 +120,7 @@ class Database:
         except Exception as err:
             print(f"Ошибка при добавлении пользователя в  БД: {err}")
             return False
-        return False
+        return True
 
     def getUser(self, user_id):
         try:

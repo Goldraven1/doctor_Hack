@@ -51,7 +51,7 @@ def register(request=request):
                 print("Вы успешно авторизированы", "success")
                 return redirect(url_for('login'))
             else:
-                print("Ошибка при добавлении в БД", "error")
+                print("Ошибка при добавлении в БД",)
         else:
             print("Неверно заполнены поля", "error")
 
@@ -79,5 +79,10 @@ def profile():
     return f"""<p><a href="{url_for('logout')}">Выйти из профиля</a>
         </p>user info: {current_user.get_id()}"""
 
+@app.route('/doc', methods=['GET', 'POST'])
+@login_required
+def doc():
+    return render_template('doc.html', title='Doc Page')
+    
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=5000)
