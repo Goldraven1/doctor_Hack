@@ -83,6 +83,11 @@ def profile():
 @login_required
 def doc():
     return render_template('doc.html', title='Doc Page')
+
+@app.route('/head_center', methods=['GET', 'POST'])
+@login_required
+def doc():
+    return render_template('head_center.html', title='Head_center Page')
     
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=5000)
