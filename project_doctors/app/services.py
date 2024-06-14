@@ -56,3 +56,16 @@ def schedule(request=request):
         print("Расписание не добавлено", e)
 
 
+def hr_worker_add_employee(request=request):
+    try:
+        if request.method == 'POST':
+            name = request.form['name']
+            surname = request.form['surname']
+            patronymic = request.form['patronymic']
+            change_rate = request.form['change_rate']
+            minus_employee = request.form['minus_employee']
+            db.hr_worker_add_employee(name, surname, patronymic, change_rate, minus_employee)
+            print("Сотрудник успешно добавлен!")
+            return redirect('/'), 200
+    except Exception as e:
+        print("Сотрудник не добавлен:", e)

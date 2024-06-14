@@ -164,7 +164,7 @@ class Database:
         except Exception as err:
             print(f"Ошибка при получении данных из БД: {err}")
 
-        return False
+        return True
 
     def get_user_email(self, email):
         try:
@@ -273,4 +273,16 @@ class Database:
             return json1_str
         except Exception as err:
             print("Ошибка при получении расписания:", err)
+            return False
+        
+    def hr_worker_add_employee(self, name, surname, patronymic, change_rate, minus_employee):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute(f"INSERT INTO news_employee(name, surname, patronymic, change_rate, minus_employee) VALUES({name, surname, patronymic, change_rate, minus_employee})")
+            self.conn.commit()
+            self.__cur.close()
+            print("Сотрудник успешно добавлен!")
+            return True
+        except Exception as err:
+            print("Ошибка при добавлении сотрудника:", err)
             return False

@@ -1,6 +1,14 @@
 {% extends 'layout.html' %} {% block content %}
 
-<h1>Hi, Doc :ъ</h1>
+<h2>Добавить непредвиденные обстоятельства</h2>
+<form action="/add_unforeseen_circumstances" method="POST">
+  <input type="text" name="doctor_id" placeholder="ID врача" />
+  <input type="text" name="type" placeholder="Тип" />
+  <input type="date" name="start_date" />
+  <input type="date" name="end_date" />
+  <input type="checkbox" name="approved" value="True" /> Одобрено
+  <input type="submit" value="Добавить обстоятельства" />
+</form>
 
 <script src="{{url_for('static', filename='main.js')}}"></script>
 {% endblock content %}
