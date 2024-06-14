@@ -1,26 +1,20 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  </head>
-  <body>
-    <h1>Admin Page</h1>
-    <form action="{{ url_for('add_user') }}" method="post">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required><br>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required><br>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required><br>
-      <label for="role">Role:</label>
-      <select id="role" name="role" required>
-        <option value="doctor">Doctor</option>
-        <option value="hr_worker">HR Worker</option>
-      </select><br>
-      <input type="submit" value="Add User">
-    </form>
-  </body>
-</html>
+{% extends 'layout.html' %} {% block content %}
+
+<h1>Admin Page</h1>
+<form action="{{ url_for('add_user') }}" method="post">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required /><br />
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required /><br />
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required /><br />
+  <label for="role">Role:</label>
+  <select id="role" name="role" required>
+    <option value="doctor">Doctor</option>
+    <option value="hr_worker">HR Worker</option></select
+  ><br />
+  <input type="submit" value="Add User" />
+</form>
+
+<script src="{{url_for('static', filename='schedule.js')}}"></script>
+{% endblock content %}

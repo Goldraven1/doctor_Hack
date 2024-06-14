@@ -22,6 +22,7 @@ app.add_url_rule('/add_unforeseen_circumstances', view_func=unforeseen_circumsta
 app.add_url_rule('/add_schedule', view_func=schedule, methods=['GET', 'POST'])
 app.add_url_rule('/delete_doctor', view_func=del_doctor, methods=['GET', 'POST'])
 app.add_url_rule('/hr_worker_add_employee', view_func=hr_worker_add_employee, methods=['GET', 'POST'])
+app.add_url_rule('/get_schedule', view_func=db.get_schedule, methods=['GET'])
 
 @login_manager.user_loader
 def load_user(user_id):

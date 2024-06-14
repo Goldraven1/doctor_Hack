@@ -309,3 +309,14 @@ class Database:
         except Exception as err:
             print("Ошибка при обновлении сотрудника:", err)
             return False
+        
+    def get_schedule(self):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute("SELECT * FROM complete_schedule")
+            res = __cur.fetchall()
+            print("Данные успешно получены!")
+            return res
+        except Exception as err:
+            print("Ошибка при обновлении сотрудника:", err)
+            return False
