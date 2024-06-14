@@ -20,26 +20,35 @@ class Database:
             self.engine = None
 
     
-    def get_work_days_doctors(self):
+    def get_work_days_doctors(self, number):
         try:
+            day = 'days_' + str(number)
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"SELECT name, days1, rate FROM work_days_doc")
+            self.__cur.execute(f"SELECT name, {day}, rate FROM work_days_doc")
             res = self.__cur.fetchall()
             return res
         except Exception as err:
             print('error: ', err)
             return False
         
-    def add_schedule_doc(self, doc, lst_days, doc_schedule):
+    def add_schedule_doc(self, doc, lst_days, doc_schedule, count):
         try:
+            number_week = {
+                "1": 0,
+                "2": 7,
+                "3": 14,
+                "4": 21,
+                "5": 28
+            }
             for day_ in lst_days:
-                day = 'day' + str(day_)
+                c = number_week[f"{count}"]
+                day = 'day' + str(c + day_)
                 start_time = '8:30'
                 end_time = (510 + (doc_schedule[0] * 60) + doc_schedule[1]) / 60
                 if int(end_time * 10) % 10 != 0:
                     end_time = round(end_time)
                     end_time = f"{end_time}:30"
-                
+                    
                 self.__cur = self.conn.cursor()
                 self.__cur.execute(f"UPDATE complete_schedule SET {day} = '{start_time} - {end_time}, отдых = {doc_schedule[1]}' WHERE name = '{doc}'")
                 self.conn.commit()
@@ -48,11 +57,11 @@ class Database:
             print('error: ', err)
             return False
     
-    def add_work_day(self, doctor_name, rate):
+    def add_work_day(self, doctor_name, rate, count, days_duty):
         try:
+            days = 'days_' + str(count)
             self.__cur = self.conn.cursor()
-            
-            self.__cur.execute(f"SELECT days FROM work_days_doc WHERE name = '{doctor_name}'")
+            self.__cur.execute(f"SELECT {days} FROM work_days_doc WHERE name = '{doctor_name}'")
             work_days = self.__cur.fetchall()
             work_days = work_days[0]
             work_days = work_days[0]
@@ -60,20 +69,40 @@ class Database:
             rate_doc = self.__cur.fetchall()
             rate_doc = rate_doc[0]
             rate_doc = rate_doc[0]
+            if count == 5:
+                if work_days < days_duty and rate_doc == 1:
+                    self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
+                    self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                    self.conn.commit()
+                    self.__cur.close()
+                elif work_days < days_duty and rate_doc == 0.75:
+                    self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
+                    self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                    self.conn.commit()
+                    self.__cur.close()
+                    return True
+                elif work_days < days_duty:
+                    self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
+                    self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
+                    self.conn.commit()
+                    self.__cur.close()
+                    return True
+                else:
+                    return 0
             if work_days < 5 and rate_doc == 1:
-                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
                 self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
                 self.conn.commit()
                 self.__cur.close()
                 return True
             elif work_days < 5 and rate_doc == 0.75:
-                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
                 self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
                 self.conn.commit()
                 self.__cur.close()
                 return True
             elif work_days < 5:
-                self.__cur.execute(f"UPDATE work_days_doc SET days = days + 1  WHERE name = '{doctor_name}' ")
+                self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
                 self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
                 self.conn.commit()
                 self.__cur.close()
@@ -209,7 +238,7 @@ class Database:
         except Exception as err:
             print("Ошибка при добавлении расписания:", err)
             return False
-        
+
     def create_role(self):
             if not self.engine:
                 print("Отсутствует подключение к базе данных")
@@ -231,5 +260,4 @@ class Database:
             except Exception as err:
                 print("Ошибка при создании ролей и пользователей:", err)
                 return False
-      
 
