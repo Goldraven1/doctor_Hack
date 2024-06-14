@@ -134,7 +134,7 @@ class Database:
             print(f"Ошибка: {err}")
             return False
         
-    def add_user(self, name, email, hpsw):
+    def add_user(self, name, email, hpsw, role):
         try:
             self.__cur = self.conn.cursor()
             self.__cur.execute(f"SELECT COUNT(*) FROM users WHERE email LIKE '{email}'")
@@ -143,12 +143,11 @@ class Database:
                 print("Пользователь с таким email уже существует")
                 return False
 
-
-            self.__cur.execute("INSERT INTO users(name, email, psw) VALUES(%s, %s, %s)", (name, email, hpsw))
+            self.__cur.execute("INSERT INTO users(name, email, psw, role) VALUES(%s, %s, %s, %s)", (name, email, hpsw, role))
             self.conn.commit()
             self.__cur.close()
         except Exception as err:
-            print(f"Ошибка при добавлении пользователя в  БД: {err}")
+            print(f"Ошибка при добавлении пользователя в БД: {err}")
             return False
         return True
 

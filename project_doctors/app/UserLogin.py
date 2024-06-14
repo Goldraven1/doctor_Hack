@@ -1,7 +1,6 @@
-# UserLogin.py
 class UserLogin:
     def fromDB(self, user_id, db):
-        self.__user = db.get_user(user_id)
+        self.__user = db.getUser(user_id)  # Изменено с get_user на getUser
         return self
     
     def create(self, user):
@@ -21,6 +20,6 @@ class UserLogin:
         return str(self.__user[0])
 
     def get_role(self):
-        if len(self.__user) > 4:
-            return self.__user[4]
+        if len(self.__user) > 5:
+            return self.__user[5]
         return None
