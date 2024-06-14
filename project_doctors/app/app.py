@@ -1,13 +1,12 @@
 # app.py
 from flask import Flask, render_template, redirect, url_for, request, abort
-from services import doctor, unforeseen_circumstances, schedule, del_doctor
+from services import doctor, unforeseen_circumstances, schedule, del_doctor, hr_worker_add_employee
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from UserLogin import UserLogin
 from models import Database
 from functools import wraps
-from project_doctors.app.services import hr_worker_add_employee
 
 db = Database()
 
@@ -59,20 +58,20 @@ def login():
             print("неверная пара логин/пароль")
     return render_template("login.html", title="Авторизация")
 
-@app.route("/register", methods=['POST', 'GET'])
-def register():
-    if request.method == 'POST':
-        if len(request.form['name']) > 4 and len(request.form['email']) > 4 and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
-            hashed_password = generate_password_hash(request.form['psw'])
-            res = db.add_user(request.form['name'], request.form['email'], hashed_password, request.form['role'])
-            if res:
-                print("Вы успешно зарегистрированы", "success")
-                return redirect(url_for('login'))
-            else:
-                print("Ошибка при добавлении в БД", "error")
-        else:
-            print("Неверно заполнены поля", "error")
-    return render_template("register.html", title="Регистрация")
+# @app.route("/register", methods=['POST', 'GET'])
+# def register():
+#     if request.method == 'POST':
+#         if len(request.form['name']) > 4 and len(request.form['email']) > 4 and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
+#             hashed_password = generate_password_hash(request.form['psw'])
+#             res = db.add_user(request.form['name'], request.form['email'], hashed_password, request.form['role'])
+#             if res:
+#                 print("Вы успешно зарегистрированы", "success")
+#                 return redirect(url_for('login'))
+#             else:
+#                 print("Ошибка при добавлении в БД", "error")
+#         else:
+#             print("Неверно заполнены поля", "error")
+#     return render_template("register.html", title="Регистрация")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

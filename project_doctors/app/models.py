@@ -275,6 +275,18 @@ class Database:
             print("Ошибка при получении расписания:", err)
             return False
         
+    def check_employee(self, name, surname, patronymic):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute(f"SELECT id FROM news_employee WHERE name = {name}, surname = {surname}, patronymic = {patronymic}")
+            res = __cur.fetchone()
+            print(res)
+            print("Сотрудник найден!")
+            return True
+        except Exception as err:
+                    print("Ошибка при обнаружении сотрудника:", err)
+                    return False
+
     def hr_worker_add_employee(self, name, surname, patronymic, change_rate, minus_employee):
         try:
             __cur = self.conn.cursor()
@@ -285,4 +297,16 @@ class Database:
             return True
         except Exception as err:
             print("Ошибка при добавлении сотрудника:", err)
+            return False
+        
+    def hr_worker_update_employee(self, name, surname, patronymic, change_rate, minus_employee):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute(f"INSERT INTO news_employee(name, surname, patronymic, change_rate, minus_employee) VALUES({name, surname, patronymic, change_rate, minus_employee})")
+            self.conn.commit()
+            self.__cur.close()
+            print("Сотрудник успешно добавлен!")
+            return True
+        except Exception as err:
+            print("Ошибка при обновлении сотрудника:", err)
             return False

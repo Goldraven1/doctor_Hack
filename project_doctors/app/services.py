@@ -64,8 +64,13 @@ def hr_worker_add_employee(request=request):
             patronymic = request.form['patronymic']
             change_rate = request.form['change_rate']
             minus_employee = request.form['minus_employee']
-            db.hr_worker_add_employee(name, surname, patronymic, change_rate, minus_employee)
-            print("Сотрудник успешно добавлен!")
+            res = db.check_employee(name, surname, patronymic)
+            if res == False:
+                db.hr_worker_add_employee(name, surname, patronymic, change_rate, minus_employee)
+                print("Сотрудник успешно добавлен!")
+            else:
+                db.hr_worker_update_employee(change_rate, minus_employee)
+                print('Данные сотрудника обновлены')
             return redirect('/'), 200
     except Exception as e:
         print("Сотрудник не добавлен:", e)
