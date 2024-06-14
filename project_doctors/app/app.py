@@ -23,6 +23,17 @@ app.add_url_rule('/add_unforeseen_circumstances', view_func=unforeseen_circumsta
 app.add_url_rule('/add_schedule', view_func=schedule, methods=['GET', 'POST'])
 app.add_url_rule('/delete_doctor', view_func=del_doctor, methods=['GET', 'POST'])
 
+@app.route('/doc_schedule/<int:doc_id>', methods=['GET'])
+def doc_schedule(doc_id):
+    try:
+        # получение расписания
+        if request.method == 'GET':
+            res = db.get_doc_schedule(doc_id)
+            print("Расписание успешно предоставлено!")
+            return res
+    except Exception as e:
+        print("Расписание не получено: ", e)
+
 @login_manager.user_loader
 def load_user(user_id):
     return UserLogin().fromDB(user_id, db)

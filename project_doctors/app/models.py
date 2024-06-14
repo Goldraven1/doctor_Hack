@@ -1,3 +1,4 @@
+from flask import json
 import psycopg2
 from psycopg2 import OperationalError
 from sqlalchemy import create_engine, text
@@ -260,4 +261,16 @@ class Database:
             except Exception as err:
                 print("Ошибка при создании ролей и пользователей:", err)
                 return False
-
+    
+    def get_doc_schedule(self, id):
+        try:
+            __cur = self.conn.cursor()
+            __cur.execute(f"SELECT * FROM complete_schedule WHERE id = '{id}' LIMIT 1")
+            res = __cur.fetchone()
+            json1_str = json.dumps(res)
+            print(json1_str)
+            print("Расписание успешно предоставлено!")
+            return json1_str
+        except Exception as err:
+            print("Ошибка при получении расписания:", err)
+            return False
