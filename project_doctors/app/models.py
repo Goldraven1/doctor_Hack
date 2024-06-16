@@ -12,8 +12,8 @@ class Database:
                 host="176.123.160.78",
                 password="kWOWtIb_",
                 port="5432"
-            )  # инициализируем подклюсение к бд
-            self.engine = create_engine('postgresql://postgres:kWOWtIb_@176.123.160.78/postgres')  # делаем движоk для sqlALchemy
+            )  # инициализируем подключение к бд
+            self.engine = create_engine('postgresql://postgres:kWOWtIb_@176.123.160.78/postgres')  # делаем движок для sqlALchemy
             print("Подключение к базе данных успешно!")
         except OperationalError as err: # отлов ошибки
             print("Подключение к базе данных не удалось:", err)  # сообщение об ошибке
@@ -24,13 +24,13 @@ class Database:
     def get_work_days_doctors(self, number): # получаем рабочие дни доктора
         try:
             day = 'days_' + str(number) # формируем навзвание столбца в бд
-            self.__cur = self.conn.cursor() # делаем курсо для работы с бд
+            self.__cur = self.conn.cursor() # делаем курсор для работы с бд
             self.__cur.execute(f"SELECT name, {day}, rate FROM work_days_doc")  # выбираем данные по столбцам из бд
             res = self.__cur.fetchall() # парсим данные с запроса
             return res # возвращаем данные
         except Exception as err: # отлов ошибки
             print('error: ', err) # сообщение об ошибке
-            return False # возврат лжи тк вышла ошибка
+            return False # возврат лжи, так как вышла ошибка
         
     def add_schedule_doc(self, doc, lst_days, doc_schedule, count):
         try:
@@ -53,7 +53,7 @@ class Database:
                 self.__cur = self.conn.cursor() # получение курсора
                 self.__cur.execute(f"UPDATE complete_schedule SET {day} = '{start_time} - {end_time}, отдых = {doc_schedule[1]}' WHERE name = '{doc}'") # запрос н обновление данных в расписании
                 self.conn.commit() # коммитим изменения
-                self.__cur.close() # закрываем курсос
+                self.__cur.close() # закрываем курсор
         except Exception as err: # отлов ошибки
             print('error: ', err)
             return False
@@ -70,12 +70,12 @@ class Database:
             rate_doc = self.__cur.fetchall() # парсим ставку с запроса
             rate_doc = rate_doc[0] # делаем корректный формат ставки
             rate_doc = rate_doc[0]# делаем корректный формат ставки
-            if count == 5:# если счетчик = 5 то есть ласт неделя то у нас особые условия
+            if count == 5:# если счетчик = 5 то есть ласт неделя, то у нас особые условия
                 if work_days < days_duty and rate_doc == 1:# проверка условия ставки и рабочих дней
                     self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")# обновление данных по рабочим дням
                     self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")# обновление ставки
                     self.conn.commit()# коммитим условия
-                    self.__cur.close()# закрываем курсос
+                    self.__cur.close()# закрываем курсоp
                 elif work_days < days_duty and rate_doc == 0.75:
                     self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ")
                     self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ")
@@ -91,7 +91,7 @@ class Database:
                 else:
                     return 0
             if work_days < 5 and rate_doc == 1:# проверка точности кол-ва рабочих дней
-                self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ") # обновление раб дней
+                self.__cur.execute(f"UPDATE work_days_doc SET {days} = {days} + 1  WHERE name = '{doctor_name}' ") # обновление рабочих дней
                 self.__cur.execute(f"UPDATE work_days_doc SET rate =  {rate}  WHERE name = '{doctor_name}' ") # обновление ставки
                 self.conn.commit() # коммит дней
                 self.__cur.close() # закрываем курсор
@@ -117,7 +117,7 @@ class Database:
     def get_all_doctors(self):
         try:
             self.__cur = self.conn.cursor()
-            self.__cur.execute("SELECT name, modality, additional_modality, rate FROM doctor_schedule WHERE rate > 0") # выбор всех данных по врачам и их самих
+            self.__cur.execute("SELECT name, modality, additional_modality, rate FROM doctor_schedule WHERE rate > 0") # выбор всех данных по врачам
             res = self.__cur.fetchall()
             return res
         except Exception as err:
@@ -137,7 +137,7 @@ class Database:
     def add_user(self, name, email, hpsw, role):
         try:
             self.__cur = self.conn.cursor()
-            self.__cur.execute(f"SELECT COUNT(*) FROM users WHERE email LIKE '{email}'") # проверка на наличие уже в системе 
+            self.__cur.execute(f"SELECT COUNT(*) FROM users WHERE email LIKE '{email}'") # проверка на наличие в системе 
             res = self.__cur.fetchone()
             if res[0] > 0:
                 print("Пользователь с таким email уже существует")
@@ -168,7 +168,7 @@ class Database:
     def get_user_email(self, email):
         try:
             __cur = self.conn.cursor()
-            __cur.execute(f"SELECT * FROM users WHERE email = '{email}' LIMIT 1") # получаем юзера где есть совпадения по емаил
+            __cur.execute(f"SELECT * FROM users WHERE email = '{email}' LIMIT 1") # получаем юзера, где есть совпадения по емаил
             res = __cur.fetchone()
             if not res:
                 print('пользователь не найден')
@@ -240,7 +240,7 @@ class Database:
             return False
 
     def create_role(self):
-            if not self.engine:
+            if not self.engine: # чек на наличие движка и в противном случае работает код ниже
                 print("Отсутствует подключение к базе данных")
                 return False
             

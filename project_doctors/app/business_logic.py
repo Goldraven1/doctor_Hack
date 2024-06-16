@@ -21,7 +21,7 @@ days_month = {
 
 class plan():
     def __init__(self, weeks_research):
-        self.weeks_research = weeks_research  # стартовые данные = план недельных исследований
+        self.weeks_research = weeks_research  # стартовые данные = план недельных(всех недель) исследований
 
     def get_days_duty(self):
         current_month = datetime.datetime.now().month  # данный месяц
@@ -35,7 +35,7 @@ class plan():
         current_days = days_month[f"{current_month}"]  # сколько всего дней
 
         weeks = current_days // 7  # сколько недель надо работать
-        days_duty = current_days % 7  # сколько дней надо работать
+        days_duty = current_days % 7  # сколько дней надо работать (в последней неделе)
 
         all_doing = []     #  всего сделали
         plan_last_week = []  # план последней недели
@@ -43,14 +43,14 @@ class plan():
 
         duty = self.weeks_research[-1]  #  долг ласт недели
         
-        for i in duty:  # бежим по долге
+        for i in duty:  # бежим по долгу
             data = i * coef  # получение данные по коэфу
             data = round(data)  # округляем
             plan_last_week.append(data)  #  добавляем в послелнюю неделю
 
         while weeks > 0:  # цикл пока недель больше 0
             for i in self.weeks_research:  # бежим по недельному плану исследований
-                if weeks <= 0:  # если их становится меньше или равно 0 то ломаем всё
+                if weeks <= 0:  # если их становится меньше или равно 0, то ломаем всё
                     break
                 all_doing.append(i)  # добавляем в "всего делать"
                 weeks -= 1  # минус неделя
@@ -61,7 +61,7 @@ class plan():
 
 weeks_research = db.get_weeks_research()  # получим план исследований
 
-plan_ = plan(weeks_research)  # создание сущности класса план и добавление аргументы всех исследований
+plan_ = plan(weeks_research)  # создание сущности класса plan и добавление аргументa всех исследований
 plan_month = plan_.generate_plan()  # генерируем план на месяц
 
 global days_duty  # делаем глобальной переменную 
@@ -73,10 +73,10 @@ class employee_doctor():
         self.rate = rate # инициализируем ставку
 
     def rate_calc(self):
-        if self.rate == 1:  # ставка = 1 делаем следующее и так по аналогии
+        if self.rate == 1:  # ставка = 1, выполняем код ниже и так по аналогии с остальными ставками
             doc_time_work = 8 # время работы
             doc_time_chill = 60  # время отдыха
-            return [doc_time_work, doc_time_chill]  #  массив с данными о работе по данной ставку
+            return [doc_time_work, doc_time_chill]  #  лист с данными о работе по данной ставке
         elif self.rate == 0.75:
             doc_time_work = 6
             doc_time_chill = 30
@@ -130,7 +130,7 @@ class calculate_work_days():
         for pl in plan_month:  # бежим по плану на месяц
             count += 1  # инкремент счетчика
 
-            # ниже идет прием каждого исследования в отдельную переменную
+            # ниже идет запись каждого исследования в отдельную переменную
             quantity_research_dens = pl[0]  
             quantity_research_kt = pl[1]
             quantity_research_kt_ky_1 = pl[2]
@@ -142,13 +142,13 @@ class calculate_work_days():
             quantity_research_rg = pl[8]
             quantity_research_flg = pl[9]
             
-            while quantity_research_flg > 0: # выполняем всё ниже пока не закроем план по исследованиям модальности
+            while quantity_research_flg > 0: # выполняем всё ниже пока не закроем план по исследованиям
                 for i in self.doctors[::-1]:  # бежим по докторам, перевернув их 
                     str_extra_modality = i[2] # получаем доп модальности
                     if type(str_extra_modality) == str: # проверка на тип модальностей (если их нет, то тип null)
                         doc_extra_modality = str_extra_modality.split(',') # пихаем в переменную доп модальности 
                     for s in doc_extra_modality:  #  бежим по экстра модальностям
-                        if i[1] == 'ФЛГ' or (s.replace(' ', '') == 'ФЛГ'):  #  проверка основной и доп модальностей на совпадение с текущим исследованием
+                        if i[1] == 'ФЛГ' or (s.replace(' ', '') == 'ФЛГ'):  #  проверка основной и доп модальностей врача на совпадение с модальностью текущего исследования
                             if quantity_research_flg > 0:  # если список еще не выполнен
                                 rate = i[3]  #  получение ставки
 
@@ -360,8 +360,8 @@ doctors = db.get_all_doctors()  # получение всех докторов
 
 doc_calc = calculate_work_days(doctors)  # сущность - расчет рабочих дней врачей
 
-db.clear_work_days() # очищение предыдущих рабочих дней 
-doc_calc.calc()  #  запуск расчета рабочий дней
+db.clear_work_days() # очищение предыдущих рабочих дней  
+doc_calc.calc()  #  запуск расчета рабочий дней 
 
 
 class calculate_schedule():
@@ -372,7 +372,7 @@ class calculate_schedule():
         for _ in range(1, 6):  # бежим от 1 до 6
             work_days_doctors = db.get_work_days_doctors(_)  # получаем все рабочие дни
 
-            for i in work_days_doctors: # бежим по рабочий дням
+            for i in work_days_doctors: # бежим по рабочим дням
                 doc = i[0]  # определяем доктора
                 work_days = i[1]  # определяем его рабочие дни
                 rate = i[2]  #  определяем его ставку
@@ -381,10 +381,10 @@ class calculate_schedule():
                     count__ = _ - 2  #  минусуем счетчик
                     for i in range(count__):  # бежим по нему
                         lst_days.append(i)  # добавляем дни
-                    work_days = 0 # делаем условие чтоб всё завершилось ниже
-                while work_days > 0:  # ниже по условию реализован алгоритм подбора 2 разных выходных в неделю подряд
+                    work_days = 0 # делаем условие, чтоб всё завершилось ниже
+                while work_days > 0:  # ниже по условию реализован алгоритм подбора 2 выходных в неделю подряд
                         check = False  # чекер по стандарту = ложь
-                        while check == False:  # пока он ложб делаем все что ниже
+                        while check == False:  # пока он ложь делаем все, что ниже
                             lst_days = [random.randint(1, 7) for k in range(work_days)]  # формируем массив рандом чисел в диапозоне 
                             s = set(lst_days)  # делаем все уникальным
                             if len(lst_days) == len(s):  # если все уникальные символы
@@ -399,11 +399,11 @@ class calculate_schedule():
                                 last = 1000000000000000000000000000
                                 for i in lst_days:
                                     if i - last >= 3:
-                                        check = True # если разрыв между числами идущими по порядку включают 2 и больше то нам подходит
+                                        check = True # если разрыв между числами идущими по порядку равен 2 и больше то нам подходит
                                     last = i
                             else:
                                 check = False # в противном случае оставляем ложь и перебираем дальше
-                        work_days = 0 # заканчиваем если все успешно
+                        work_days = 0 # заканчиваем, если все успешно
 
                 em = employee_doctor(rate) # создаем сущность работника
                 doc_schedule = em.rate_calc() # вычисляем ставку
@@ -411,6 +411,6 @@ class calculate_schedule():
                 db.add_schedule_doc(doc, lst_days, doc_schedule, _)  # добавляем расписание в бд
             
 
-calc_schedule = calculate_schedule() # создаем сущность
+calc_schedule = calculate_schedule() # создаем сущность класс calculate_schedule 
 db.clear_schedule() # очищаем прошлое расписание
 calc_schedule.calc() # вычисляем новое
