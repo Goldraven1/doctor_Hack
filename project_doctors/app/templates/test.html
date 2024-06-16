@@ -1,0 +1,32 @@
+{% extends 'layout.html' %} {% block content %}
+<h1>Database Record Test</h1>
+
+<h2>Добавить врача</h2>
+<form action="/add_doctor" method="POST">
+  <input type="text" name="name" placeholder="Имя" required />
+  <input
+    type="text"
+    name="specialization"
+    placeholder="Специализация"
+    required
+  />
+  <input type="text" name="contact" placeholder="Контакт" required />
+  <input type="submit" value="Добавить врача" />
+</form>
+
+<h2>Удалить врача</h2>
+<form action="/delete_doctor" method="POST">
+  <input type="text" name="doctor_id" placeholder="ID врача" />
+  <input type="submit" value="Удалить врача" />
+</form>
+
+<h2>Добавить расписание</h2>
+<form action="/add_schedule" method="POST">
+  <input type="text" name="doctor_id" placeholder="ID врача" />
+  <input type="date" name="date" />
+  <input type="text" name="shift" placeholder="Смена" />
+  <input type="submit" value="Добавить расписание" />
+</form>
+
+<script src="{{url_for('static', filename='main.js')}}"></script>
+{% endblock content %}

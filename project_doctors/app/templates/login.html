@@ -1,0 +1,15 @@
+{% extends 'layout.html' %} {% block content %}
+
+<form action="/login" , method="POST">
+  <input type="text" name="email" placeholder="email" required />
+  <br />
+  <input type="text" name="psw" placeholder="password" required />
+  <br />
+  <label>Запомнить меня <input type="checkbox" name="remember" /></label>
+  <br />
+  <input type="submit" value="Войти" />
+  <a href="{{url_for('register')}}">Регистрация</a>
+</form>
+
+<script src="{{url_for('static', filename='main.js')}}"></script>
+{% endblock content %}
