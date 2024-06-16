@@ -1,4 +1,4 @@
 from models import Database 
 
-db = Database()
-db.check_users()
+db = Database() # создание сущности БД
+db.check_users() # чекаем юзеров

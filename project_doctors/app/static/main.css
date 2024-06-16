@@ -4,3 +4,16 @@
   height: 100px;
   background-color: #ff0000;
 }
+
+.schedule_block {
+  display: flex;
+
+  /* display: flex; */
+}
+.schedule {
+  /* max-width: 30px; */
+  margin-left: 100px;
+}
+.forSchedule {
+  display: flex;
+}
